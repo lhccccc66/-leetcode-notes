@@ -1,0 +1,21 @@
+## 33
+
+写个二分查找的函数然后根据条件查找。
+
+ 模板代码：
+
+```java
+public int binSerach(int nums[], int left, int right, int target){
+        if(left>right) return -1;
+
+        int mid = (left+right)/2;
+        if(nums[mid] == target){
+            return mid;
+        }else if(nums[mid] > target){
+            return binSerach(nums, left, mid-1, target);
+        }else{
+            return binSerach(nums, mid+1, right, target);
+        }
+    }
+}
+```
