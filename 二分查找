@@ -20,6 +20,8 @@ public int binSerach(int nums[], int left, int right, int target){
 }
 ```
 
+
+
 补充：
 
 由于每次二分，数组的一侧必然是有序的，另一侧可能是有序的，所以我们可以不断二分，那么目标数迟早会在有序的数组里。也就是说只要写一个二分查询就可以了
@@ -52,4 +54,38 @@ class Solution {
     }
 }
 ```
+
+
+
+## 34
+
+给二分查找做个小变式，使得结果可以变成重复元素序列最左边的索引。然后再使target+1找到end索引。
+
+```java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int start = binSearch(nums,target);
+        if(start == nums.length ||nums[start] != target) return new int[]{-1,-1};
+        int end = binSearch(nums, target+1) -1;
+        return new int[]{start, end};
+    }
+
+    public int binSearch(int[] nums, int target){
+        int left = 0;
+        int right = nums.length-1;
+        while(left <= right){
+            int mid = (left+right)/2;
+            if(nums[mid]>= target){
+                right = mid-1;
+            }else{
+                left = mid+1;
+            }
+        }
+        return left;
+    }
+}
+```
+
+补充：如果该元素不存在，那么start会等于数组长度或者nums[start] != target。
+
 
