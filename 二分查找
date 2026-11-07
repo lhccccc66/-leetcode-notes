@@ -89,3 +89,31 @@ class Solution {
 补充：如果该元素不存在，那么start会等于数组长度或者nums[start] != target。
 
 
+
+## 153
+
+查边界用 l  < r，查存在用 l <=  r。用nums[mid]和nums[n-1]作比较，因为小于的证明在第二段升序序列，大于的说明在第一段升序序列。本题用闭区间，因为左端是不可能作为最小值，而右端可以。
+
+```java
+class Solution {
+    public int findMin(int[] nums) {
+        int n = nums.length;
+        int left = 0;
+        int right = n-1;
+        while(left < right){
+            int mid = left + (right-left)/2;
+            if(nums[mid] <= nums[n-1]){
+                right = mid;
+            }else{
+                left = mid+1;
+            }
+        }
+        return nums[right];
+    }
+}
+```
+
+
+
+
+
