@@ -114,6 +114,100 @@ class Solution {
 ```
 
 
+## 4
+
+#### 方法一：枚举
+
+目前理解了最久时间的hard，先用枚举思路想更利于后面二分的理解。中位数即中位数左边都是小于它的，右边都是大于它的。由于i和j的关系，所以只需要遍历a数组即可，其余的数会让b数组自动填入。由于两个数组都是升序的，然后我们只需要找到一个点使得   ai​≤bj+1​ 且 ai+1​>bj 即可。我们可以把判断条件优化到只要  ai​+1>bj就停止枚举，因为上一个循环中已经ai​≤bj+1。
+
+* 如果 m+n 是偶数，中位数为 max(ai​,bj​) 和 min(ai+1​,bj+1​) 的平均值。
+* 如果 m+n 是奇数，中位数为 max(ai​,bj​)。
+
+设中位数左边为第一部分，右边为第二部分。i和j分别为nums1和nums2中属于第一部分的数量，j = (m+n+1)/2。第一部分中数的数量p=（m+n）/2，则第二部分为m+n-p。
+
+先让短的做数组a，避免j溢出b数组。然后在ab数组两端放正负无穷数。说明存在一个位置，满足 ai​≤bj+1​ 且 ai+1​>bj​。
+
+```java
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums1.length > nums2.length){
+            int[] tmp = nums1;
+            nums1 = nums2;
+            nums2 = tmp;
+        }
+
+        int n = nums1.length;
+        int m = nums2.length;
+        int[] a = new int[n+2];
+        int[] b = new int[m+2];
+        System.arraycopy(nums1,0,a,1,n);
+        System.arraycopy(nums2,0,b,1,m);
+
+        a[0] = b[0] = Integer.MIN_VALUE;
+        a[n+1] = b[m+1] = Integer.MAX_VALUE;
+
+        int i = 0;
+        int j = (m+n+1)/2;
+        while (a[i + 1] <= b[j]) {
+            i++; // 继续枚举
+            j--;
+        }
+
+        int max1 = Math.max(a[i], b[j]); // 第一组的最大值
+        int min2 = Math.min(a[i + 1], b[j + 1]); // 第二组的最小值
+        return (m + n) % 2 > 0 ? max1 : (max1 + min2) / 2.0;
+    }
+}
+```
+
+#### 方法二：二分
+
+基本思路大差不差只不过把枚举换成了二分。直接用原数组操作，最后再判断边界条件。由于直接用原数组操作所以i和j是数组下标而不是代表数量。p = (m+n)/2   等于 a[0,,,i]+b[0,,,j]，即(m+n)/2= i+j+2，所以j = (m+n+1)/2-i-2;
+
+用int left = -1;int right = m;来维护边界情况。
+
+P(left) 成立      ← left 是"P 成立"的位置 → 保证答案不会跑到它左边
+P(right) 不成立   ← right 是"P 不成立"的位置 → 保证答案不会跑到它右边
+
+二分去找最极限处的nums1[i] <= nums2[j+1]，则nums[i+1] > nums2[j]。此时i= left，j=(m+n+1)/2-i-2。然后根据i、j值来获取两部分的最大最小值。i=-1代表第一部分a数组一个数没有，i=m代表a数组都在第一部分
+
+```java
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums1.length > nums2.length){
+            int[] tmp = nums1;
+            nums1 = nums2;
+            nums2 = tmp;
+        }
+
+        int m = nums1.length;
+        int n = nums2.length;
+        int left = -1;
+        int right = m;
+
+        while(left < right-1){
+            int i = left + (right-left)/2;
+            int j = (m+n+1)/2-i-2;
+            if(nums1[i] <= nums2[j+1]){
+                left = i;
+            }else{
+                right = i;
+            }
+        } 
+
+        int i = left;
+        int j = (m+n+1)/2-i-2;
+        int a1 = i >= 0 ? nums1[i] : Integer.MIN_VALUE;
+        int b1 = j >= 0 ? nums2[j] : Integer.MIN_VALUE;
+        int a2 = i+1 < m ? nums1[i+1] : Integer.MAX_VALUE;
+        int b2 = j+1 < n ? nums2[j+1] : Integer.MAX_VALUE;
+
+        int max1 = Math.max(a1, b1);
+        int min2 = Math.min(a2, b2);
+        return (m+n)%2>0 ? max1 : (max1+min2)/2.0;
+    }
+}
+```
 
 
 
