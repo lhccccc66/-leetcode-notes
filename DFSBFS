@@ -84,3 +84,40 @@ class Solution {
     
 }
 ```
+
+
+
+## 46
+
+这题是要用到回溯的dfs。用一个数组判断nums里的数有没有被用过，然后dfs遍历，最后回溯就完了。
+
+```java
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        int n = nums.length;
+        List<Integer> path = Arrays.asList(new Integer[n]);
+        List<List<Integer>> res = new ArrayList<>();
+        boolean[] onPath = new boolean[n];
+        dfs(0, nums, res, path, onPath);
+        return res;
+    }
+
+    public void dfs(int i, int[] s, List<List<Integer>> res, List<Integer> path, boolean[] onPath){
+        if(i == s.length){
+            res.add(new ArrayList<Integer>(path));
+            return;
+        }
+
+        for(int j = 0; j < s.length; j++){
+            if(!onPath[j]){
+                path.set(i,s[j]);
+                onPath[j] = true;
+                dfs(i+1, s, res, path, onPath);
+                onPath[j] = false;
+            }
+        }
+    }
+}
+```
+
+注意：   List<Integer> path = Arrays.asList(new Integer[n];是直接给List这么多size，有参构造只是定容量，size= 0。
