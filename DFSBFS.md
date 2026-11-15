@@ -121,3 +121,34 @@ class Solution {
 ```
 
 注意：   List<Integer> path = Arrays.asList(new Integer[n];是直接给List这么多size，有参构造只是定容量，size= 0。
+
+
+class Solution {
+    public List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        int n = candidates.length;
+        int[] cnt = new int[n];
+        dfs(0,n,candidates,cnt,target,0);
+        return ans;    
+    }
+
+    public void dfs(int u,int n,int[] candidates,int[] cnt,int target,int s){
+        if(u == n){
+            if(s == target){
+                List<Integer> res = new ArrayList<>();
+                for(int i=0;i<n;i++){
+                    for(int j=0;j<cnt[i];j++){
+                        res.add(candidates[i]);
+                    }
+                }
+                ans.add(res);
+            }
+            return;
+        }
+        for(int i=0;i<=(target-s)/candidates[u];i++){
+            cnt[u] = i;
+            dfs(u+1,n,candidates,cnt,target,s+i*candidates[u]);
+        }
+    }
+}
