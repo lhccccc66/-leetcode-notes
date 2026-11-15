@@ -127,7 +127,7 @@ class Solution {
 
 子集型回溯
 
-![f47bf1709d5b4c6d9d73449abd122aa2](file:///C:/Users/lhccccc_/Pictures/Typedown/f47bf170-9d5b-4c6d-9d73-449abd122aa2.png?msec=1794734882134)
+![f47bf170-9d5b-4c6d-9d73-449abd122aa2](file:///C:/Users/lhccccc_/Pictures/Typedown/f47bf170-9d5b-4c6d-9d73-449abd122aa2.png)
 
 #### 方法一：选或不选
 
