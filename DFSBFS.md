@@ -123,32 +123,131 @@ class Solution {
 注意：   List<Integer> path = Arrays.asList(new Integer[n];是直接给List这么多size，有参构造只是定容量，size= 0。
 
 
-class Solution {
-    public List<List<Integer>> ans = new ArrayList<>();
+78
 
-    public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        int n = candidates.length;
-        int[] cnt = new int[n];
-        dfs(0,n,candidates,cnt,target,0);
-        return ans;    
-    }
+子集型回溯
 
-    public void dfs(int u,int n,int[] candidates,int[] cnt,int target,int s){
-        if(u == n){
-            if(s == target){
-                List<Integer> res = new ArrayList<>();
-                for(int i=0;i<n;i++){
-                    for(int j=0;j<cnt[i];j++){
-                        res.add(candidates[i]);
-                    }
-                }
-                ans.add(res);
+![f47bf1709d5b4c6d9d73449abd122aa2](file:///C:/Users/lhccccc_/Pictures/Typedown/f47bf170-9d5b-4c6d-9d73-449abd122aa2.png?msec=1794734882134)
+
+#### 方法一：选或不选
+
+只有叶子节点才是结果。
+
+    class Solution {
+        public List<List<Integer>> subsets(int[] nums) {
+            List<List<Integer>> res = new ArrayList<>();
+            List<Integer> path  = new ArrayList<>();
+            dfs(0, nums, res, path);
+            return res;
+        }
+    
+        public void dfs(int i, int[]nums, List<List<Integer>> res, List<Integer> path){
+            if(i == nums.length){
+                res.add(new ArrayList<>(path));
+                return;
             }
-            return;
-        }
-        for(int i=0;i<=(target-s)/candidates[u];i++){
-            cnt[u] = i;
-            dfs(u+1,n,candidates,cnt,target,s+i*candidates[u]);
+            dfs(i+1, nums, res, path);
+            path.add(nums[i]);
+            dfs(i+1, nums, res, path);
+            path.removeLast();
         }
     }
-}
+
+#### 方法二：选哪个
+
+每个节点都是结果。
+
+    class Solution {
+        public List<List<Integer>> subsets(int[] nums) {
+            List<List<Integer>> res = new ArrayList<>();
+            List<Integer> path  = new ArrayList<>();
+            dfs(0, nums, res, path);
+            return res;
+        }
+    
+        public void dfs(int i, int[]nums, List<List<Integer>> res, List<Integer> path){
+            res.add(new ArrayList<Integer>(path));
+            for(int j = i; j < nums.length; j++){
+                path.add(nums[j]);
+                dfs(j+1, nums, res, path);
+                path.removeLast();
+            }
+        }
+    }
+
+## 39
+
+子集型回溯
+
+#### 方法一：选哪个
+
+    public void dfs(int j, int sum, int[] c, List<List<Integer>> res, List<Integer> path, int target){
+            if(sum == target){
+                res.add(new ArrayList<>(path));
+                return;
+            }
+    
+            for(int i = j; i < c.length; i++){
+                if(sum+c[i] > target) continue;
+                path.add(c[i]);
+                dfs(i,sum+c[i], c, res, path, target);
+                path.removeLast();
+    
+            }
+        }
+    }
+
+#### 方法二：选或不选
+
+    class Solution {
+        public List<List<Integer>> combinationSum(int[] candidates, int target) {
+            List<List<Integer>> res = new ArrayList<>();
+            List<Integer> path  = new ArrayList<>();
+            dfs(0 ,target, candidates, res, path);
+            return res;
+        }
+    
+        public void dfs(int j, int left, int[] c, List<List<Integer>> res, List<Integer> path){
+            if(left == 0){
+                res.add(new ArrayList<>(path));
+                return;
+            }
+            if(j == c.length || left < 0) return;
+            dfs(j+1,left,c,res,path);
+            path.add(c[j]);
+            dfs(j,left-c[j],c,res,path);
+            path.remove(path.size()-1);
+        }
+    }
+
+#### 大佬做法（1ms ）：orzorz
+
+    class Solution {
+        public List<List<Integer>> ans = new ArrayList<>();
+    
+        public List<List<Integer>> combinationSum(int[] candidates, int target) {
+            int n = candidates.length;
+            int[] cnt = new int[n];
+            dfs(0,n,candidates,cnt,target,0);
+            return ans;    
+        }
+    
+        public void dfs(int u,int n,int[] candidates,int[] cnt,int target,int s){
+            if(u == n){
+                if(s == target){
+                    List<Integer> res = new ArrayList<>();
+                    for(int i=0;i<n;i++){
+                        for(int j=0;j<cnt[i];j++){
+                            res.add(candidates[i]);
+                        }
+                    }
+                    ans.add(res);
+                }
+                return;
+            }
+            for(int i=0;i<=(target-s)/candidates[u];i++){
+                cnt[u] = i;
+                dfs(u+1,n,candidates,cnt,target,s+i*candidates[u]);
+            }//算出这个数可以被取多少次
+        }
+    }
