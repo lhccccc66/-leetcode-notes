@@ -1,3 +1,4 @@
+<img width="574" height="204" alt="f47bf170-9d5b-4c6d-9d73-449abd122aa2" src="https://github.com/user-attachments/assets/00d1f819-3199-4ffe-816d-3b16ad29de89" />
 ## 200
 
 数组的dfs和二叉树的dfs十分类似。  第一步都是判断边界条件，然后操作递归元素，最后再递归其他元素。
@@ -127,7 +128,8 @@ class Solution {
 
 子集型回溯
 
-![f47bf170-9d5b-4c6d-9d73-449abd122aa2](Pictures/Typedown/f47bf170-9d5b-4c6d-9d73-449abd122aa2.png)
+<img width="574" height="204" alt="f47bf170-9d5b-4c6d-9d73-449abd122aa2" src="https://github.com/user-attachments/assets/cf63c63f-2ab4-44e4-aa54-de5c0b195a07" />
+
 
 #### 方法一：选或不选
 
