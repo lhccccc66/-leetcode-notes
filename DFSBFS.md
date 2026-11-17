@@ -1,8 +1,6 @@
-<img width="574" height="204" alt="f47bf170-9d5b-4c6d-9d73-449abd122aa2" src="https://github.com/user-attachments/assets/00d1f819-3199-4ffe-816d-3b16ad29de89" />
-
 ## 200
 
-数组的dfs和二叉树的dfs十分类似。  第一步都是判断边界条件，然后操作递归元素，最后再递归其他元素。
+数组的dfs和二叉树的dfs十分类似。   第一步都是判断边界条件，然后操作递归元素，最后再递归其他元素。
 
 都是从原问题拆成小问题。本题原问题：数岛屿数量；子问题：判断岛屿节点四周是不是岛屿节点。
 
@@ -21,7 +19,7 @@ class Solution {
             }
         }
         return res;
-        
+
     }
 
     public void dfs(char[][] grid,int i,int j) {
@@ -35,14 +33,11 @@ class Solution {
         dfs(grid,i,j+1);
         dfs(grid,i-1,j);
         dfs(grid,i,j-1);
-        
+
     }
 
 }
 ```
-
-
-
 
 ## 994
 
@@ -50,7 +45,7 @@ class Solution {
 
 ```java
 class Solution {
-   
+
     public int orangesRotting(int[][] grid) {
         int ans = 0;
         int fresh = 0;
@@ -83,15 +78,13 @@ class Solution {
         return fresh > 0 ? -1 :ans;
     }
 
-    
+
 }
 ```
 
-
-
 ## 46
 
-这题是要用到回溯的dfs。用一个数组判断nums里的数有没有被用过，然后dfs遍历，最后回溯就完了。
+这题是要用到回溯的dfs。用一个数组判断nums里的数有没有被用过，然后dfs遍历，最后回溯就完了。排列型回溯
 
 ```java
 class Solution {
@@ -124,13 +117,25 @@ class Solution {
 
 注意：   List<Integer> path = Arrays.asList(new Integer[n];是直接给List这么多size，有参构造只是定容量，size= 0。
 
+模板：
+
+```java
+void backtrack(路径, 选择列表) {
+    if (满足结束条件) { 收集结果; return; }   // ① 终止
+    for (选择 : 选择列表) {
+        if (已使用[选择]) continue;            // ② 去重
+        选择; path.add(选择);
+        backtrack(路径, 选择列表);            // ③ 递归
+        撤销; path.remove(选择);              // ④ 回溯
+    }
+}
+```
 
 ## 78
 
 子集型回溯
 
-<img width="574" height="204" alt="f47bf170-9d5b-4c6d-9d73-449abd122aa2" src="https://github.com/user-attachments/assets/cf63c63f-2ab4-44e4-aa54-de5c0b195a07" />
-
+![78 子集 · 回溯树](images/78-subsets-backtracking.png)
 
 #### 方法一：选或不选
 
@@ -260,6 +265,55 @@ class Solution {
             cnt[u] = i;
             dfs(u+1,n,candidates,cnt,target,s+i*candidates[u]);
         }//算出这个数可以被取多少次
+    }
+}
+```
+
+## 79
+
+和200有点类似，两个优化方法能0ms秒杀。原问题：word是否存在网格中；子问题：dfs的第i个数是不是等于word[i].
+
+```java
+class Solution {
+    int[][] DIRS = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    public boolean exist(char[][] board, String word) {
+        int[] cnt = new int[128];
+        for(char[] s : board){
+            for(char s1 : s){
+                cnt[s1]++;
+            }
+        }
+        int[] wordcnt = new int[128];
+        char[] w = word.toCharArray();
+        for(char c : w){
+            if(++wordcnt[c] > cnt[c]) return false;
+        }
+
+        if(cnt[w[w.length-1]] < cnt[w[0]]){
+            w = new StringBuilder(word).reverse().toString().toCharArray();
+        }
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                if(dfs(i,j,w,board,0)) return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean dfs(int i, int j, char[] word, char[][] board, int k){
+        if(board[i][j] != word[k]) return false;
+        if(k == word.length-1) return true;
+
+        board[i][j] = 0;
+        for(int[] d : DIRS){
+            int x = i + d[0];
+            int y = j + d[1];
+            if(x>=0 && x<board.length && y>=0 && y<board[i].length && dfs(x,y,word,board,k+1)){
+                return true;
+            }
+        }
+        board[i][j] = word[k];
+        return false;
     }
 }
 ```
