@@ -317,3 +317,43 @@ class Solution {
     }
 }
 ```
+
+## 207
+
+原问题：能否完成所有课程；
+
+子问题：第i个课程是否在之前已经在当前递归路上
+
+下一个子问题：遍历第i个课程的先修课程看看它们是否在之前已经在当前递归路上
+
+```java
+class Solution {
+    int[] colors; //0:未访问， 1：正在访问，2：已经访问结束
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<ArrayList<Integer>> pre = new ArrayList<>();
+        for(int i = 0; i < numCourses; i++){
+            pre.add(i,new ArrayList<>());
+        }
+        for(int[] p : prerequisites){
+            pre.get(p[0]).add(p[1]);
+        }
+        colors = new int[numCourses];
+        for(int[] p : prerequisites){
+            int x = p[0];
+            if(!dfs(x,pre)) return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(int x, List<ArrayList<Integer>> pre){
+        if(colors[x] == 2) return true;
+        if(colors[x] == 1) return false;
+        colors[x] = 1;
+        for(int k : pre.get(x)){
+            if(!dfs(k,pre)) return false;
+        }
+        colors[x] = 2;
+        return true;
+    }
+}
+```
